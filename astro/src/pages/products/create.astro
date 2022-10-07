@@ -1,0 +1,13 @@
+---
+import Layout from "../../layouts/main.astro";
+import ProductCreateUpdate from "../../components/ProductCreateUpdate";
+
+if (!Astro.cookies.has("jwt")) {
+    return Astro.redirect("/login");
+}
+---
+
+<Layout title="Create product">
+    <h1>Create product</h1>
+    <ProductCreateUpdate product={null} client:load />
+</Layout>

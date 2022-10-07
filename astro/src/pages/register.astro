@@ -1,0 +1,13 @@
+---
+import Layout from "../layouts/main.astro";
+import { Login } from "../components/Login";
+
+if (Astro.cookies.has("jwt")) {
+    return Astro.redirect("/products");
+}
+---
+
+<Layout title="Register page">
+    <h1>Register page</h1>
+    <Login isRegister={true} client:load />
+</Layout>

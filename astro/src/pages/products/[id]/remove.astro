@@ -1,0 +1,33 @@
+---
+import Layout from "../../../layouts/main.astro";
+import { IProduct } from "../../../components/ProductCard";
+import ProductRemove from "../../../components/ProductRemove";
+
+if (!Astro.cookies.has("jwt")) {
+    return Astro.redirect("/login");
+}
+
+const { id } = Astro.params;
+
+let product: IProduct;
+try {
+    const response = await fetch(
+        "http://localhost:1337/api/products/" + id + "?populate=image",
+        {
+            method: "GET",
+            headers: {
+                Authorization: "Bearer " + Astro.cookies.get("jwt").value,
+            },
+        }
+    );
+    const result = await response.json();
+    product = result.data;
+} catch (e) {
+    console.log(e);
+}
+---
+
+<Layout title="Remove product">
+    <h1>Remove product</h1>
+    <ProductRemove client:load product={product} />
+</Layout>

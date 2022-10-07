@@ -1,0 +1,8 @@
+---
+if (Astro.cookies.has("jwt")) {
+    Astro.cookies.delete("jwt");
+}
+return Astro.redirect("/login");
+---
+
+<div>111</div>

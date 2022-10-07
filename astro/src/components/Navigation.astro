@@ -1,0 +1,25 @@
+---
+const navigation = [
+    { url: "/", title: "Home" },
+    { url: "/products", title: "Products" },
+];
+---
+
+<ul style="display: flex; list-style-type:none;">
+    {
+        navigation.map((item) => (
+            <li style="margin-right: 5px;">
+                <a href={item.url}>{item.title}</a>
+            </li>
+        ))
+    }
+    <li style="margin-right: 5px;">
+        {
+            Astro.cookies.has("jwt") ? (
+                <a href={"/logout"}>{"Logout"}</a>
+            ) : (
+                <a href={"/login"}>{"Login"}</a>
+            )
+        }
+    </li>
+</ul>

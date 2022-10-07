@@ -1,0 +1,33 @@
+---
+import Layout from "../../../layouts/main.astro";
+import ProductCreateUpdate from "../../../components/ProductCreateUpdate";
+import { IProduct } from "../../../components/ProductCard";
+
+if (!Astro.cookies.has("jwt")) {
+    return Astro.redirect("/login");
+}
+
+const { id } = Astro.params;
+
+let product: IProduct;
+try {
+    const response = await fetch(
+        "http://localhost:1337/api/products/" + id + "?populate=image",
+        {
+            method: "GET",
+            headers: {
+                Authorization: "Bearer " + Astro.cookies.get("jwt").value,
+            },
+        }
+    );
+    const result = await response.json();
+    product = result.data;
+} catch (e) {
+    console.log(e);
+}
+---
+
+<Layout title="Update product">
+    <h1>Update product</h1>
+    <ProductCreateUpdate client:load product={product} />
+</Layout>

@@ -1,0 +1,35 @@
+---
+import Layout from "../layouts/main.astro";
+import CartItem from "../components/CartItem";
+
+if (!Astro.cookies.has("jwt")) {
+    return Astro.redirect("/login");
+}
+
+let cart;
+try {
+    const response = await fetch(
+        "http://localhost:1337/api/users/me?populate[0]=cart&populate[1]=cart.product&populate[2]=cart.product.image",
+        {
+            method: "GET",
+            headers: {
+                Authorization: "Bearer " + Astro.cookies.get("jwt").value,
+            },
+        }
+    );
+    const result = await response.json();
+    cart = result.cart;
+} catch (e) {
+    console.log(e);
+}
+---
+
+<Layout title="home page">
+    <h1>My Cart</h1>
+
+    {
+        cart &&
+            cart.length &&
+            cart.map((item) => <CartItem item={item} client:load />)
+    }
+</Layout>

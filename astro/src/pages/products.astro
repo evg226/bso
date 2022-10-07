@@ -1,0 +1,37 @@
+---
+import Layout from "../layouts/main.astro";
+import ProductCard, { IProduct } from "../components/ProductCard";
+
+if (!Astro.cookies.has("jwt")) {
+    return Astro.redirect("/login");
+}
+
+let products: IProduct[];
+try {
+    const response = await fetch(
+        "http://localhost:1337/api/products?populate=image",
+        {
+            method: "GET",
+            headers: {
+                Authorization: "Bearer " + Astro.cookies.get("jwt").value,
+            },
+        }
+    );
+    const result = await response.json();
+    products = result.data;
+} catch (e) {
+    console.log(e);
+}
+---
+
+<Layout title="home page">
+    <h1>Products</h1>
+    <a href="/products/create">Create</a>
+    {
+        products &&
+            products.length &&
+            products.map((product) => (
+                <ProductCard client:load product={product} />
+            ))
+    }
+</Layout>
